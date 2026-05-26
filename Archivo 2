@@ -1,0 +1,8 @@
+/* Insertar monedas */
+
+INSERT INTO Moneda(Moneda, Sigla, Simbolo, Emisor)
+VALUES
+('Peso Colombiano','COP','$','Banco de la Republica'),
+('Dolar Americano','USD','$','Federal Reserve'),
+('Euro','EUR','€','Banco Central Europeo'),
+('Libra Esterlina','GBP','£','Bank of England');

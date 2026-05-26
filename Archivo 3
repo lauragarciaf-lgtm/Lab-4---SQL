@@ -1,0 +1,52 @@
+/*    Registrar cambios diarios de moneda para los ultimos 2 meses */
+
+DO $$
+DECLARE
+    FechaActual DATE;
+    IdMonedaActual INT;
+    ValorCambio FLOAT;
+    ExisteCambio INT;
+BEGIN
+
+    /* inicia desde hace 60 dias */
+    FechaActual := CURRENT_DATE - INTERVAL '60 days';
+
+    /* recorre cada dia */
+    WHILE FechaActual <= CURRENT_DATE LOOP
+
+        /* recorre las 4 monedas */
+        FOR IdMonedaActual IN 1..4 LOOP
+
+            /* valor de cambio de ejemplo */
+            ValorCambio := 3800 + random() * 500;
+
+            /* valida el cambio  */
+            SELECT COUNT(*) INTO ExisteCambio
+            FROM CambioMoneda
+            WHERE IdMoneda = IdMonedaActual
+            AND Fecha = FechaActual;
+
+            IF ExisteCambio > 0 THEN
+
+                /* actualiza el cambio */
+                UPDATE CambioMoneda
+                SET Cambio = ValorCambio
+                WHERE IdMoneda = IdMonedaActual
+                AND Fecha = FechaActual;
+
+            ELSE
+
+                /* inserta el cambio */
+                INSERT INTO CambioMoneda(IdMoneda, Fecha, Cambio)
+                VALUES(IdMonedaActual, FechaActual, ValorCambio);
+
+            END IF;
+
+        END LOOP;
+
+        /* siguiente dia */
+        FechaActual := FechaActual + INTERVAL '1 day';
+
+    END LOOP;
+
+END $$;
